@@ -3,13 +3,14 @@
 sentence embeddings model tokenizer for la sutysisku
 
 ## Build
-
+```
 wasm-pack build --target nodejs --out-dir pkg/nodejs
 wasm-pack build --target web --out-dir pkg/web
 wasm-pack build --target bundler --out-dir pkg/bundler
 find ./pkg -name ".gitignore" -type f -delete
 npm login
 npm publish --access=public
+```
 
 ## 🔋 Batteries Included
 
