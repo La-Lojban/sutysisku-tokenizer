@@ -1,0 +1,21 @@
+{
+  "name": "@sutysisku/tokenizer",
+  "version": "0.0.6",
+  "description": "sentence embedding tokenizer for la sutysisku app",
+  "main": "pkg/nodejs/sutysisku_tokenizer.js",
+  "browser": "pkg/web/sutysisku_tokenizer.js",
+  "module": "pkg/bundler/sutysisku_tokenizer.js",
+  "types": "sutysisku_tokenizer.d.ts",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "files": [
+    "src/",
+    "pkg/"
+  ]
+}
