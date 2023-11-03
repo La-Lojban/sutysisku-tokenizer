@@ -11,8 +11,8 @@ crate-type = ["cdylib", "rlib"]
 default = ["console_error_panic_hook"]
 
 [dependencies]
-wasm-bindgen = "0.2.84"
-js-sys = "0.3.57"
+wasm-bindgen = "0.2.88"
+js-sys = "0.3.65"
 wee_alloc = { version = "0.4.5", optional = true }
 tokenizers = { default-features = false, features = ["unstable_wasm"], git = "https://github.com/huggingface/tokenizers" }
 
@@ -21,9 +21,17 @@ tokenizers = { default-features = false, features = ["unstable_wasm"], git = "ht
 # all the `std::fmt` and `std::panicking` infrastructure, so isn't great for
 # code size when deploying.
 console_error_panic_hook = { version = "0.1.7", optional = true }
+serde = { version = "1.0.190", features = ["derive"] }
+anyhow = "1.0.75"
+getrandom = { version = "0.2.10", features = ["js"] }
+serde_json = "1.0.107"
+serde-wasm-bindgen = "0.6.1"
+tsify = "0.4.5"
+kiddo = { version = "2.1.2", features = ["serialize"] }
 
 [dev-dependencies]
-wasm-bindgen-test = "0.3.37"
+wasm-bindgen-test = "0.3.38"
+rstest = "0.18.2"
 
 [profile.release]
 # Tell `rustc` to optimize for small code size.
