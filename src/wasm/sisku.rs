@@ -1,7 +1,9 @@
-use crate::hash;
 use crate::utils::set_panic_hook;
-use crate::{Query, Resource, SearchResult, TopKMatches};
-use kiddo::float::{distance::squared_euclidean, kdtree::KdTree};
+use crate::{hash, SearchResult};
+use crate::{Query, Resource, SearchResults, TopKMatches};
+use kiddo::float::distance::manhattan;
+use kiddo::float::kdtree::KdTree;
+// use kiddo::immutable::float::kdtree::ImmutableKdTree;
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, convert::TryInto};
 
@@ -12,6 +14,7 @@ use wasm_bindgen::prelude::*;
 // More detail: https://v8.dev/blog/4gb-wasm-memory
 const BUCKET_SIZE: usize = 32;
 
+// pub type Tree = ImmutableKdTree<f32, u64, 384, 32>;
 pub type Tree = KdTree<f32, u64, 384, BUCKET_SIZE, u16>;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -53,8 +56,19 @@ impl Sisku {
 
         let data: HashMap<u64, String> = data_vec.clone().into_iter().collect();
 
-        let mut tree: Tree = KdTree::new();
+        // let embeddings: Vec<[f32; 384]> = resource
+        //     .embeddings
+        //     .iter()
+        //     .map(|embedding| {
+        //         let mut e = embedding.embeddings.clone();
+        //         e.resize(384, 0.0);
+        //         e.try_into().unwrap()
+        //     })
+        //     .collect();
 
+        // let tree: ImmutableKdTree<f32, u64, 384, 32> = ImmutableKdTree::new_from_slice(&embeddings);
+
+        let mut tree: Tree = KdTree::new();
         resource
             .embeddings
             .iter()
@@ -73,7 +87,7 @@ impl Sisku {
     }
 
     #[wasm_bindgen]
-    pub fn search(&self, query: Query, k: TopKMatches) -> SearchResult {
+    pub fn search(&self, query: Query, k: TopKMatches) -> SearchResults {
         let query: QueryX = QueryX::Embeddings(query);
         let mut query: Vec<f32> = match query {
             QueryX::Embeddings(q) => q.to_owned(),
@@ -81,21 +95,23 @@ impl Sisku {
         query.resize(384, 0.0);
 
         let query: &[f32; 384] = &query.try_into().unwrap();
-        let neighbors: Vec<kiddo::float::neighbour::Neighbour<f32, u64>> =
-            self.index.tree.nearest_n(query, k, &squared_euclidean);
+        let neighbors = self.index.tree.nearest_n(query, k, &manhattan);
 
-        let mut result: Vec<String> = vec![];
+        let mut result: Vec<SearchResult> = vec![];
 
         for neighbor in &neighbors {
             let doc = &self.index.data.get(&neighbor.item);
             if let Some(document) = doc {
-                result.push(document.to_string());
+                result.push(SearchResult {
+                    item: document.to_string(),
+                    distance: neighbor.distance,
+                });
             }
         }
 
-        let neighbors: Vec<String> = result.into_iter().collect();
+        let neighbors: Vec<SearchResult> = result.into_iter().collect();
 
-        SearchResult { neighbors }
+        SearchResults { neighbors }
     }
 
     #[wasm_bindgen]

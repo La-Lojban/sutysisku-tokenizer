@@ -1,4 +1,4 @@
-use js_sys;
+// use js_sys;
 use std::str::FromStr;
 use tokenizers::tokenizer::{Encoding, Tokenizer};
 use wasm_bindgen::prelude::*;
@@ -24,7 +24,7 @@ impl TokenizerWasm {
     #[wasm_bindgen(constructor)]
     pub fn from_buffer(json: String) -> TokenizerWasm {
         TokenizerWasm {
-            tokenizer: Tokenizer::from_str(json.as_str()).unwrap().into(),
+            tokenizer: Tokenizer::from_str(json.as_str()).unwrap(),
         }
     }
 

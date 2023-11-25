@@ -19,6 +19,13 @@ pub struct Resource {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Tsify)]
 #[tsify(into_wasm_abi, from_wasm_abi)]
+pub struct SearchResults {
+    pub neighbors: Vec<SearchResult>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Tsify)]
+#[tsify(into_wasm_abi, from_wasm_abi)]
 pub struct SearchResult {
-    pub neighbors: Vec<String>,
+    pub distance: f32,
+    pub item: String,
 }

@@ -1,6 +1,6 @@
 {
   "name": "@sutysisku/tokenizer",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "description": "sentence embedding tokenizer for la sutysisku app",
   "main": "pkg/nodejs/sutysisku_tokenizer.js",
   "browser": "pkg/web/sutysisku_tokenizer.js",
